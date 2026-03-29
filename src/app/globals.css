@@ -1,26 +1,50 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@font-face {
+    font-family: instrumentserif;
+    src: url(../../public/fonts/InstrumentSerif/InstrumentSerif-Regular.ttf);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@font-face {
+    font-family: inter-reg;
+    src: url(../../public/fonts/Inter/Inter_28pt-Regular.ttf);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@font-face {
+    font-family: monument;
+    src: url(../../public/fonts/Arame/Arame.ttf);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@font-face {
+    font-family: font;
+    src: url(../../public/fonts/berkeleymonotrial-regular.otf);
+}
+
+.scifi-scrollbar {
+    scrollbar-color: #315d59 #081918;
+    scrollbar-width: thin;
+    scrollbar-gutter: stable;
+}
+
+.scifi-scrollbar::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.scifi-scrollbar::-webkit-scrollbar-track {
+    background: #081918;
+    border-left: 1px solid #123a3a;
+}
+
+.scifi-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #1b4441 0%, #315d59 100%);
+    border: 2px solid #081918;
+}
+
+.scifi-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #24514d 0%, #3b6d68 100%);
+}
+
+.scifi-scrollbar::-webkit-scrollbar-corner {
+    background: #081918;
 }
