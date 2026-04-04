@@ -19,8 +19,11 @@ export default function RootLayout({
         <aside className="flex h-full w-74 flex-col border border-[#123a3a] bg-[radial-gradient(circle_at_top,#103733_0%,#091d1d_58%)]">
           <header className="border-b border-[#123a3a] px-4 py-4">
             <div className="flex items-center justify-between">
-              <h1 className="text-xl text-[#ebfff8]">LOGO</h1>
-              <Image src="/image.png" alt="Logo" width={32} height={32} />
+              <div className="flex gap-1.5 items-center">
+              <Image src="/image.png" alt="Logo" width={25} height={25} />
+              <h1 className="text-md text-[#ebfff8]">SCILOG</h1>
+              </div>
+              <h1 className="text-sm text-[#6da6a1]">v0.0.1</h1>
             </div>
             <p className="mt-3 text-[10px] uppercase text-[#6da6a1]">
               Personal archive
