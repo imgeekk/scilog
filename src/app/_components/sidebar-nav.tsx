@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouteTransition } from "./route-transition";
 
 const navItems = [
   { href: "/logs", label: "Logs" },
@@ -10,6 +11,7 @@ const navItems = [
 
 export function SidebarNav() {
   const pathname = usePathname();
+  const routeTransition = useRouteTransition();
 
   return (
     <section className="flex flex-col gap-2">
@@ -20,6 +22,7 @@ export function SidebarNav() {
           <Link
             key={item.href}
             href={item.href}
+            onClick={(event) => routeTransition?.navigateWithTransition(event, item.href)}
             className={`border px-3 py-3 text-sm uppercase transition ${
               isActive
                 ? "border-[#315d59] bg-[#0a2323] text-white"

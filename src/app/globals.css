@@ -48,3 +48,26 @@
 .scifi-scrollbar::-webkit-scrollbar-corner {
     background: #081918;
 }
+
+@keyframes scifi-flicker {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    20% {
+        opacity: 0.74;
+    }
+    24% {
+        opacity: 0.92;
+    }
+    48% {
+        opacity: 0.66;
+    }
+    52% {
+        opacity: 0.94;
+    }
+}
+
+.scifi-flicker {
+    animation: scifi-flicker 220ms steps(2, end) 1;
+}
