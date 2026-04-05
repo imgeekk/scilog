@@ -79,7 +79,20 @@ export function LogsClient({
   return (
     <main className="ml-2 flex min-h-full w-full flex-col gap-2 overflow-hidden bg-[#091d1d] text-white">
       <section className="flex min-h-0 flex-1 flex-col border border-[#123a3a] bg-[radial-gradient(circle_at_top,#103733_0%,#091d1d_55%)]">
-        <header className="grid gap-3 border-b border-[#123a3a] px-4 py-4 lg:grid-cols-[1.8fr_auto]">
+        <motion.header 
+          className="grid gap-3 border-b border-[#123a3a] px-4 py-4 origin-center lg:grid-cols-[1.8fr_auto]"
+          initial={{ opacity: 0, filter: "brightness(2.4)" }}
+          animate={{
+            opacity: [0, 0.22, 0.9, 0.4, 1, 0.82, 1],
+            filter: [
+              "brightness(2.4)",
+              "brightness(1.75)",
+              "brightness(1.15)",
+              "brightness(1)",
+            ],
+          }}
+          transition={{ duration: 0.86, ease: "easeOut" }}
+        >
           <div>
             <p className="text-[10px] uppercase text-[#6da6a1]">
               Personal archive
@@ -106,9 +119,22 @@ export function LogsClient({
               </p>
             </div>
           </div>
-        </header>
+        </motion.header>
 
-        <div className="scifi-scrollbar min-h-0 flex-1 overflow-y-scroll px-4 py-4">
+        <motion.div 
+          className="scifi-scrollbar min-h-0 flex-1 overflow-y-scroll px-4 py-4 origin-center"
+          initial={{ opacity: 0, filter: "brightness(2.4)" }}
+          animate={{
+            opacity: [0, 0.22, 0.9, 0.4, 1, 0.82, 1],
+            filter: [
+              "brightness(2.4)",
+              "brightness(1.75)",
+              "brightness(1.15)",
+              "brightness(1)",
+            ],
+          }}
+          transition={{ duration: 0.86, delay: 0.05, ease: "easeOut" }}
+        >
           <div className="flex flex-col gap-3 pb-4">
             {logs.map((log) => (
               <div
@@ -140,15 +166,43 @@ export function LogsClient({
               </div>
             ) : null}
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      <aside className="border border-[#123a3a] bg-[linear-gradient(180deg,#0c2222_0%,#081616_100%)]">
-        <div className="border-b border-[#123a3a] px-4 py-3">
+      <motion.aside className="border border-[#123a3a] bg-[linear-gradient(180deg,#0c2222_0%,#081616_100%)] p-3">
+        <motion.div 
+          className="border-b border-[#123a3a] px-4 py-3 origin-center"
+          initial={{ opacity: 0, filter: "brightness(2.4)" }}
+          animate={{
+            opacity: [0, 0.22, 0.9, 0.4, 1, 0.82, 1],
+            filter: [
+              "brightness(2.4)",
+              "brightness(1.75)",
+              "brightness(1.15)",
+              "brightness(1)",
+            ],
+          }}
+          transition={{ duration: 0.86, delay: 0.1, ease: "easeOut" }}
+        >
           <h2 className="text-xl uppercase text-[#f1f7f3]">Commit a log</h2>
-        </div>
+        </motion.div>
 
-        <form ref={formRef} action={submitAction} className="grid gap-3 p-3">
+        <motion.form 
+          ref={formRef} 
+          action={submitAction} 
+          className="grid gap-3 p-3 origin-center"
+          initial={{ opacity: 0, filter: "brightness(2.4)" }}
+          animate={{
+            opacity: [0, 0.22, 0.9, 0.4, 1, 0.82, 1],
+            filter: [
+              "brightness(2.4)",
+              "brightness(1.75)",
+              "brightness(1.15)",
+              "brightness(1)",
+            ],
+          }}
+          transition={{ duration: 0.86, delay: 0.15, ease: "easeOut" }}
+        >
           <input type="hidden" name="tag" value={tag} />
 
           <div className="relative">
@@ -271,8 +325,8 @@ export function LogsClient({
               {state.message}
             </p>
           ) : null}
-        </form>
-      </aside>
+        </motion.form>
+      </motion.aside>
     </main>
   );
 }

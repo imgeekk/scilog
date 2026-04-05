@@ -10,7 +10,7 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { usePathname, useRouter } from "next/navigation";
 
 type TransitionContextValue = {
@@ -155,15 +155,19 @@ export function RouteTransitionViewport({
 
   return (
     <div className="relative min-h-0 flex-1 overflow-hidden">
-      <div className="h-full">
+      <motion.div
+        className="h-full"
+        initial={false}
+        animate={{
+          opacity: context.phase === "animating" ? 0 : 1,
+        }}
+        transition={{
+          duration: context.phase === "revealing" ? 0.18 : 0.08,
+          ease: "easeOut",
+        }}
+      >
         {children}
-      </div>
-
-      <AnimatePresence>
-        {context.phase !== "idle" ? (
-          <RouteTransitionOverlay key="route-overlay" phase={context.phase} />
-        ) : null}
-      </AnimatePresence>
+      </motion.div>
     </div>
   );
 }
@@ -180,66 +184,4 @@ const RouteTransitionStateContext = createContext<RouteTransitionState>({
 
 function useRouteTransitionState() {
   return useContext(RouteTransitionStateContext);
-}
-
-function RouteTransitionOverlay({
-  phase,
-}: {
-  phase: "animating" | "revealing";
-}) {
-  return (
-    <motion.div
-      className="pointer-events-none absolute inset-0 z-50 overflow-hidden border border-[#315d59]/60 bg-[#071212]/70 backdrop-blur-[1px]"
-      initial={{ opacity: 0 }}
-      animate={
-        phase === "animating"
-          ? { opacity: [0.08, 0.4, 0.62, 0.28, 0.7, 0.2] }
-          : { opacity: [0.35, 0.16, 0] }
-      }
-      exit={{ opacity: 0 }}
-      transition={{ duration: phase === "animating" ? 0.92 : 0.26, ease: "easeOut" }}
-    >
-      <motion.div
-        className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,rgba(141,243,210,0.08)_30%,transparent_70%)]"
-        animate={{ y: ["-22%", "18%", "-8%", "0%"], opacity: [0.12, 0.4, 0.22, 0.08] }}
-        transition={{ duration: phase === "animating" ? 0.92 : 0.26, ease: "easeInOut" }}
-      />
-
-      <motion.div
-        className="absolute inset-x-0 top-[18%] h-px bg-[#8df3d2]/70"
-        animate={{ opacity: [0, 1, 0, 0.85, 0], x: ["-8%", "4%", "-2%", "0%"] }}
-        transition={{ duration: 0.42, repeat: 1, ease: "easeInOut" }}
-      />
-
-      <motion.div
-        className="absolute inset-x-0 top-[48%] h-[2px] bg-[#c7fff1]/60"
-        animate={{ opacity: [0, 0.9, 0.2, 1, 0], x: ["8%", "-4%", "3%", "0%"] }}
-        transition={{ duration: 0.38, delay: 0.12, repeat: 1, ease: "easeInOut" }}
-      />
-
-      <motion.div
-        className="absolute inset-x-0 top-[72%] h-px bg-[#8df3d2]/60"
-        animate={{ opacity: [0, 1, 0.15, 0.9, 0], x: ["-6%", "2%", "-1%", "0%"] }}
-        transition={{ duration: 0.4, delay: 0.18, repeat: 1, ease: "easeInOut" }}
-      />
-
-      <motion.div
-        className="absolute inset-0 border border-[#8df3d2]/20"
-        animate={{
-          opacity: [0.18, 0.72, 0.24, 0.82, 0.3, 0.15],
-          scaleX: [0.985, 1.006, 0.99, 1.002, 1],
-        }}
-        transition={{ duration: phase === "animating" ? 0.92 : 0.26, ease: "easeOut" }}
-      />
-
-      {phase === "revealing" ? (
-        <motion.div
-          className="absolute inset-y-0 left-0 w-full origin-left border-r border-[#8df3d2]/35 bg-[linear-gradient(90deg,rgba(141,243,210,0.18),rgba(141,243,210,0.04)_30%,transparent_75%)]"
-          initial={{ scaleX: 0.02, opacity: 0.65 }}
-          animate={{ scaleX: [0.02, 0.9, 1], opacity: [0.65, 0.22, 0] }}
-          transition={{ duration: 0.38, ease: "easeOut" }}
-        />
-      ) : null}
-    </motion.div>
-  );
 }

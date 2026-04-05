@@ -23,16 +23,45 @@ export default function AskPage() {
   return (
     <main className="ml-2 grid min-h-full w-full grid-cols-1 gap-2 overflow-hidden bg-[#091d1d] text-white lg:grid-cols-[0.95fr_1.25fr]">
       <section className="flex flex-col border border-[#123a3a] bg-[radial-gradient(circle_at_top,#123331_0%,#091d1d_55%)]">
-        <header className="border-b border-[#123a3a] px-4 py-4">
+        <motion.header 
+          className="border-b border-[#123a3a] px-4 py-4 origin-center"
+          initial={{ opacity: 0, scaleX: 0.001, filter: "brightness(2.4)" }}
+          animate={{
+            opacity: [0, 0.22, 0.9, 0.4, 1, 0.82, 1],
+            scaleX: [0.001, 0.28, 0.88, 1],
+            filter: [
+              "brightness(2.4)",
+              "brightness(1.75)",
+              "brightness(1.15)",
+              "brightness(1)",
+            ],
+          }}
+          transition={{ duration: 0.86, ease: "easeOut" }}
+        >
           <p className="text-[10px] uppercase text-[#6da6a1]">Query interface</p>
           <h1 className="mt-2 text-3xl leading-none text-[#ebfff8]">Ask the archive</h1>
           <p className="mt-3 max-w-md text-sm leading-6 text-[#98b7b3]">
             Ask about themes, dates, or periods in your journal. The answer is
             generated from the logs and backed by citations.
           </p>
-        </header>
+        </motion.header>
 
-        <form action={formAction} className="flex flex-1 flex-col gap-3 p-4">
+        <motion.form 
+          action={formAction} 
+          className="flex flex-1 flex-col gap-3 p-4 origin-center"
+          initial={{ opacity: 0, scaleX: 0.001, filter: "brightness(2.4)" }}
+          animate={{
+            opacity: [0, 0.22, 0.9, 0.4, 1, 0.82, 1],
+            scaleX: [0.001, 0.28, 0.88, 1],
+            filter: [
+              "brightness(2.4)",
+              "brightness(1.75)",
+              "brightness(1.15)",
+              "brightness(1)",
+            ],
+          }}
+          transition={{ duration: 0.86, delay: 0.05, ease: "easeOut" }}
+        >
           <div className="relative flex-1 border border-[#123a3a] bg-[#081918]/90">
             <textarea
               name="question"
@@ -78,16 +107,44 @@ export default function AskPage() {
             )}
             <p>One-shot ask</p>
           </div>
-        </form>
+        </motion.form>
       </section>
 
       <section className="flex min-h-0 flex-col border border-[#123a3a] bg-[linear-gradient(180deg,#0c2222_0%,#081616_100%)]">
-        <header className="border-b border-[#123a3a] px-4 py-4">
+        <motion.header 
+          className="border-b border-[#123a3a] px-4 py-4 origin-center"
+          initial={{ opacity: 0, scaleX: 0.001, filter: "brightness(2.4)" }}
+          animate={{
+            opacity: [0, 0.22, 0.9, 0.4, 1, 0.82, 1],
+            scaleX: [0.001, 0.28, 0.88, 1],
+            filter: [
+              "brightness(2.4)",
+              "brightness(1.75)",
+              "brightness(1.15)",
+              "brightness(1)",
+            ],
+          }}
+          transition={{ duration: 0.86, delay: 0.1, ease: "easeOut" }}
+        >
           <p className="text-[10px] uppercase text-[#6da6a1]">Answer channel</p>
           <h2 className="mt-2 text-2xl leading-none text-[#ebfff8]">Response</h2>
-        </header>
+        </motion.header>
 
-        <div className="scifi-scrollbar min-h-0 flex-1 overflow-y-auto p-4">
+        <motion.div 
+          className="scifi-scrollbar min-h-0 flex-1 overflow-y-auto p-4 origin-center"
+          initial={{ opacity: 0, scaleX: 0.001, filter: "brightness(2.4)" }}
+          animate={{
+            opacity: [0, 0.22, 0.9, 0.4, 1, 0.82, 1],
+            scaleX: [0.001, 0.28, 0.88, 1],
+            filter: [
+              "brightness(2.4)",
+              "brightness(1.75)",
+              "brightness(1.15)",
+              "brightness(1)",
+            ],
+          }}
+          transition={{ duration: 0.86, delay: 0.15, ease: "easeOut" }}
+        >
           {state.status === "idle" ? (
             <div className="border border-dashed border-[#1f4b49] bg-[#081818] px-4 py-10 text-center text-sm leading-6 text-[#82a4a0]">
               Ask one question at a time. The archive will return an answer and
@@ -148,7 +205,7 @@ export default function AskPage() {
               </div>
             </div>
           ) : null}
-        </div>
+        </motion.div>
       </section>
     </main>
   );

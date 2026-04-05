@@ -74,11 +74,11 @@ function RevealBlock({
 }) {
   return (
     <motion.div
-      className={`relative origin-left overflow-hidden ${className}`}
+      className={`relative origin-center overflow-hidden ${className}`}
       initial={{ opacity: 0, scaleX: 0.001, filter: "brightness(2.4)" }}
       animate={{
         opacity: [0, 0.22, 0.9, 0.4, 1, 0.82, 1],
-        scaleX: [0.001, 0.28, 0.88, 1.04, 0.985, 1],
+        scaleX: [0.001, 0.28, 0.88, 1],
         filter: [
           "brightness(2.4)",
           "brightness(1.75)",
@@ -95,8 +95,8 @@ function RevealBlock({
       />
       <motion.div
         className="absolute inset-y-0 left-0 w-full bg-[linear-gradient(90deg,rgba(141,243,210,0.22),transparent_28%)]"
-        animate={{ opacity: [0.18, 0.62, 0], scaleX: [0.02, 0.86, 1] }}
-        transition={{ duration: 0.5, delay, ease: "easeOut" }}
+        animate={{ opacity: [0.18, 0.62, 0.18], scaleX: [0.02, 0.86, 0.02] }}
+        transition={{ duration: 1.5, delay, ease: "linear", repeat: Infinity }}
       />
       <motion.div
         className="absolute inset-x-0 top-[38%] h-px bg-[#8df3d2]/70"

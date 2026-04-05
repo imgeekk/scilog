@@ -1,14 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import {
-  RouteTransitionProvider,
-  RouteTransitionViewport,
-} from "./_components/route-transition";
 import { SidebarNav } from "./_components/sidebar-nav";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Creative Journal",
+  title: "Scilog",
   description: "A sci-fi journal interface for personal logs and prompts.",
 };
 
@@ -20,9 +16,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="h-screen bg-[#051213] p-2 font-[font] tracking-tight text-white">
-        <RouteTransitionProvider>
-          <div className="flex h-full">
-            <aside className="flex h-full w-74 flex-col border border-[#123a3a] bg-[radial-gradient(circle_at_top,#103733_0%,#091d1d_58%)]">
+        <div className="flex h-full">
+          <aside className="flex h-full w-74 flex-col border border-[#123a3a] bg-[radial-gradient(circle_at_top,#103733_0%,#091d1d_58%)]">
               <header className="border-b border-[#123a3a] px-4 py-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
@@ -47,9 +42,10 @@ export default function RootLayout({
                 </button>
               </div>
             </aside>
-            <RouteTransitionViewport>{children}</RouteTransitionViewport>
+            <div className="relative min-h-0 flex-1 overflow-hidden">
+              {children}
+            </div>
           </div>
-        </RouteTransitionProvider>
       </body>
     </html>
   );
