@@ -6,7 +6,14 @@ export type AskCitation = {
 };
 
 export type AskState = {
-  status: "idle" | "success" | "validation_error" | "no_matches" | "server_error";
+  status:
+    | "idle"
+    | "success"
+    | "validation_error"
+    | "no_matches"
+    | "missing_api_key"
+    | "invalid_api_key"
+    | "server_error";
   message?: string;
   question?: string;
   answer?: string;
@@ -14,5 +21,14 @@ export type AskState = {
 };
 
 export const INITIAL_ASK_STATE: AskState = {
+  status: "idle",
+};
+
+export type GroqKeyState = {
+  status: "idle" | "success" | "removed" | "validation_error" | "invalid_key" | "server_error";
+  message?: string;
+};
+
+export const INITIAL_GROQ_KEY_STATE: GroqKeyState = {
   status: "idle",
 };

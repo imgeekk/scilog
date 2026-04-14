@@ -3,8 +3,8 @@
 import { useActionState, useState } from "react";
 import { motion } from "motion/react";
 
-import { askLogs } from "./actions";
-import { INITIAL_ASK_STATE } from "./types";
+import { askLogs, removeGroqApiKey, saveGroqApiKey } from "./actions";
+import { INITIAL_ASK_STATE, INITIAL_GROQ_KEY_STATE } from "./types";
 
 const formatDate = (value: string) =>
   new Intl.DateTimeFormat("en-GB", {
@@ -19,6 +19,16 @@ export default function AskPage() {
     askLogs,
     INITIAL_ASK_STATE
   );
+  const [saveState, saveKeyAction, isSavingKey] = useActionState(
+    saveGroqApiKey,
+    INITIAL_GROQ_KEY_STATE
+  );
+  const [removeState, removeKeyAction, isRemovingKey] = useActionState(
+    removeGroqApiKey,
+    INITIAL_GROQ_KEY_STATE
+  );
+
+  const keyStatus = removeState.status !== "idle" ? removeState : saveState;
 
   return (
     <main className="ml-2 grid min-h-full w-full grid-cols-1 gap-2 overflow-hidden bg-[#091d1d] text-white lg:grid-cols-[0.95fr_1.25fr]">
@@ -46,8 +56,7 @@ export default function AskPage() {
           </p>
         </motion.header>
 
-        <motion.form 
-          action={formAction} 
+        <motion.div
           className="flex flex-1 flex-col gap-3 p-4 origin-center"
           initial={{ opacity: 0, scaleX: 0.001, filter: "brightness(2.4)" }}
           animate={{
@@ -62,6 +71,56 @@ export default function AskPage() {
           }}
           transition={{ duration: 0.86, delay: 0.05, ease: "easeOut" }}
         >
+          <div className="space-y-3 border border-[#123a3a] bg-[#081918]/90 p-3">
+            <p className="text-[10px] uppercase text-[#6da6a1]">Groq API key</p>
+            <form action={saveKeyAction} className="flex flex-col gap-2 lg:flex-row lg:items-center">
+              <input
+                type="password"
+                name="apiKey"
+                placeholder="gsk_..."
+                className="h-11 flex-1 border border-[#1c5a55] bg-[#0b2424] px-3 text-sm text-white outline-none placeholder:text-[#50706d]"
+              />
+              <button
+                type="submit"
+                disabled={isSavingKey || isRemovingKey}
+                className="h-11 border border-[#1c5a55] bg-[#0b2424] px-4 text-xs uppercase text-[#d8f5ee] transition hover:cursor-pointer hover:bg-[#123131] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isSavingKey ? "Verifying..." : "Save key"}
+              </button>
+            </form>
+
+            <form action={removeKeyAction}>
+              <button
+                type="submit"
+                disabled={isSavingKey || isRemovingKey}
+                className="h-10 border border-[#5c2930] bg-[#201116] px-4 text-xs uppercase text-[#f7b6b0] transition hover:cursor-pointer hover:bg-[#2a151c] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isRemovingKey ? "Removing..." : "Remove saved key"}
+              </button>
+            </form>
+
+            {keyStatus.status !== "idle" ? (
+              <div
+                className={`border px-3 py-2 text-sm leading-6 ${
+                  keyStatus.status === "success"
+                    ? "border-[#214847] bg-[#0d2222] text-[#b7cbc8]"
+                    : keyStatus.status === "removed"
+                      ? "border-[#6a4b20] bg-[#24190c] text-[#f7ca7f]"
+                      : keyStatus.status === "invalid_key"
+                        ? "border-[#5c2930] bg-[#201116] text-[#f7b6b0]"
+                        : "border-[#6a4b20] bg-[#24190c] text-[#f7ca7f]"
+                }`}
+              >
+                {keyStatus.message}
+              </div>
+            ) : null}
+
+            <p className="text-xs text-[#89a9a5]">
+              Your key is encrypted before storage and used only for your own ask requests.
+            </p>
+          </div>
+
+          <form action={formAction} className="flex flex-1 flex-col gap-3">
           <div className="relative flex-1 border border-[#123a3a] bg-[#081918]/90">
             <textarea
               name="question"
@@ -73,7 +132,7 @@ export default function AskPage() {
             <button
               type="submit"
               aria-label="Ask archive"
-              disabled={isPending}
+              disabled={isPending || isSavingKey || isRemovingKey}
               className="absolute right-3 top-3 flex h-12 w-12 items-center justify-center border border-[#1c5a55] bg-[#0b2424] text-[#d8f5ee] transition hover:cursor-pointer hover:bg-[#123131] disabled:cursor-not-allowed disabled:opacity-60"
             >
               <svg
@@ -107,7 +166,8 @@ export default function AskPage() {
             )}
             <p>One-shot ask</p>
           </div>
-        </motion.form>
+          </form>
+        </motion.div>
       </section>
 
       <section className="flex min-h-0 flex-col border border-[#123a3a] bg-[linear-gradient(180deg,#0c2222_0%,#081616_100%)]">
@@ -154,6 +214,8 @@ export default function AskPage() {
 
           {state.status === "validation_error" ||
           state.status === "no_matches" ||
+          state.status === "missing_api_key" ||
+          state.status === "invalid_api_key" ||
           state.status === "server_error" ? (
             <div className="space-y-3">
               {state.question ? (
@@ -163,9 +225,11 @@ export default function AskPage() {
                 className={`border px-4 py-4 text-sm leading-6 ${
                   state.status === "validation_error"
                     ? "border-[#6a4b20] bg-[#24190c] text-[#f7ca7f]"
-                    : state.status === "no_matches"
+                    : state.status === "no_matches" || state.status === "missing_api_key"
                       ? "border-[#214847] bg-[#0d2222] text-[#b7cbc8]"
-                      : "border-[#5c2930] bg-[#201116] text-[#f7b6b0]"
+                      : state.status === "invalid_api_key"
+                        ? "border-[#5c2930] bg-[#201116] text-[#f7b6b0]"
+                        : "border-[#5c2930] bg-[#201116] text-[#f7b6b0]"
                 }`}
               >
                 {state.message}

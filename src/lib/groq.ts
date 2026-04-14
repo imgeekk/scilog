@@ -3,6 +3,8 @@ import type { RetrievedLog } from "./log-search";
 const GROQ_API_URL = "https://api.groq.com/openai/v1/responses";
 const DEFAULT_MODEL = process.env.GROQ_MODEL ?? "openai/gpt-oss-20b";
 
+export class GroqAuthError extends Error {}
+
 type ResponsesApiOutput = {
   output?: Array<{
     content?: Array<{
@@ -57,11 +59,9 @@ function extractOutputText(payload: ResponsesApiOutput) {
   return text?.trim() || null;
 }
 
-export async function askLogsQuestion(question: string, citations: RetrievedLog[]) {
-  const apiKey = process.env.GROQ_API_KEY;
-
-  if (!apiKey) {
-    throw new Error("GROQ_API_KEY is missing. My boy, you gotta set that up to ask questions about your logs.");
+async function sendGroqRequest(input: string, apiKey: string) {
+  if (!apiKey.trim()) {
+    throw new GroqAuthError("Groq API key is missing.");
   }
 
   const response = await fetch(GROQ_API_URL, {
@@ -72,15 +72,33 @@ export async function askLogsQuestion(question: string, citations: RetrievedLog[
     },
     body: JSON.stringify({
       model: DEFAULT_MODEL,
-      input: buildPrompt(question, citations),
+      input,
     }),
   });
 
   const payload = (await response.json()) as ResponsesApiOutput;
 
   if (!response.ok) {
+    if (response.status === 401 || response.status === 403) {
+      throw new GroqAuthError(payload.error?.message || "Groq rejected the API key.");
+    }
+
     throw new Error(payload.error?.message || "Groq request failed.");
   }
+
+  return payload;
+}
+
+export async function verifyGroqApiKey(apiKey: string) {
+  await sendGroqRequest("Reply with the single word OK.", apiKey);
+}
+
+export async function askLogsQuestion(
+  question: string,
+  citations: RetrievedLog[],
+  apiKey: string
+) {
+  const payload = await sendGroqRequest(buildPrompt(question, citations), apiKey);
 
   const answer = extractOutputText(payload);
 

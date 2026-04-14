@@ -11,7 +11,13 @@ npm install
 ```
 
 2. Create or update `.env` and set `DATABASE_URL`.
-   Also set `GROQ_API_KEY` if you want `/ask` to answer from your logs.
+   Also set `APP_SECRETS_KEY` for server-side encryption.
+
+   `APP_SECRETS_KEY` must be 32 bytes (raw or base64-decoded), for example:
+
+```bash
+openssl rand -base64 32
+```
 
 3. Generate the Prisma client and apply migrations.
 
@@ -33,6 +39,9 @@ npm run dev
 ```
 
 Open `http://localhost:3000/logs`.
+
+Then sign in and open `http://localhost:3000/ask` to save your own Groq API key.
+Each user key is encrypted at rest and used only for that user when asking questions.
 
 ## Current Scope
 

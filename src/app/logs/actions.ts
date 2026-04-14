@@ -1,8 +1,10 @@
 "use server";
 
 import { LogTag } from "@prisma/client";
+import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 
+import { auth } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 import type { CreateLogState } from "./types";
 
@@ -10,6 +12,14 @@ export async function createLogEntry(
   _previousState: CreateLogState,
   formData: FormData
 ): Promise<CreateLogState> {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user) {
+    return { status: "validation_error", message: "You must be signed in to create a log." };
+  }
+
   const body = formData.get("body");
   const tag = formData.get("tag");
 
@@ -26,6 +36,7 @@ export async function createLogEntry(
       data: {
         body: body.trim(),
         tag: tag as LogTag,
+        userId: session.user.id,
       },
     });
   } catch {

@@ -194,13 +194,14 @@ function scoreLog({
   return score;
 }
 
-export async function retrieveLogsForQuestion(question: string) {
+export async function retrieveLogsForQuestion(question: string, userId: string) {
   const tokens = extractQueryTokens(question);
   const tags = detectTags(question);
   const dateRange = parseDateRange(question);
 
   const logs = await getPrisma().logEntry.findMany({
     where: {
+      userId,
       ...(dateRange ? { createdAt: dateRange } : {}),
       ...(tags.length
         ? { tag: { in: tags.map((tag) => tag.toUpperCase() as LogTag) } }
@@ -223,7 +224,10 @@ export async function retrieveLogsForQuestion(question: string) {
   const fallbackLogs =
     logs.length === 0
       ? await getPrisma().logEntry.findMany({
-          where: dateRange ? { createdAt: dateRange } : undefined,
+          where: {
+            userId,
+            ...(dateRange ? { createdAt: dateRange } : undefined),
+          },
           orderBy: { createdAt: "desc" },
           take: 12,
         })
